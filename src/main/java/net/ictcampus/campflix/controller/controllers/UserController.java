@@ -1,6 +1,5 @@
 package net.ictcampus.campflix.controller.controllers;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import net.ictcampus.campflix.controller.services.UserService;
 import net.ictcampus.campflix.model.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +44,18 @@ public class UserController {
         }
     }
 
-    @PostMapping(consumes= "application/json")
+
+    @PostMapping(consumes = "application/json")
     public void signUp(@RequestBody User user){
         try{
-            System.out.println(user.getUsername());
+            System.out.println(user.getUsername()); //todo remove after debug
             userService.signUp(user);
         } catch(RuntimeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register");
         }
     }
 
-    @PostMapping(consumes = "application/json")
+    @DeleteMapping(path = "{id}")
     public void deleteById(@PathVariable Integer id){
         try{
             User user = userService.findById(id);
@@ -66,4 +66,12 @@ public class UserController {
 
     }
 
+    @PutMapping(consumes = "application/json")
+    public void update(@RequestBody User user) {
+        try{
+            userService.update(user);
+        } catch(RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not update");
+        }
+    }
 }

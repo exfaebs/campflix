@@ -1,6 +1,5 @@
 package net.ictcampus.campflix.controller.controllers;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import net.ictcampus.campflix.controller.services.MovieService;
 import net.ictcampus.campflix.controller.services.UserService;
 import net.ictcampus.campflix.model.models.Genre;
@@ -59,7 +58,7 @@ public class MovieController {
         }
     }
 
-    @PostMapping(consumes = "application/json")
+    @DeleteMapping(path = {"{id}"})
     public void deleteById(@PathVariable Integer id){
         try{
             Movie movie = movieService.findById(id);
@@ -67,7 +66,15 @@ public class MovieController {
         } catch(EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+    }
 
+    @PutMapping(consumes = "application/json")
+    public void update(@RequestBody Movie movie) {
+        try{
+            movieService.update(movie);
+        } catch(RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not update");
+        }
     }
 
 

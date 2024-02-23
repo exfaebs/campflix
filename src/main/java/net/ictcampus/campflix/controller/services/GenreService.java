@@ -37,4 +37,6 @@ public class GenreService {
         genreRepository.save(genre);
     }
 
+    public void update(Genre genre) {genreRepository.save(genre);}
+
 }

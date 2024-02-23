@@ -51,4 +51,5 @@ public class MovieService {
         movieRepository.delete(movie);
     }
 
+    public void update(Movie movie) {movieRepository.save(movie);}
 }

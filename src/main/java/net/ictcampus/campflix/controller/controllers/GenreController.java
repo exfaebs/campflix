@@ -1,6 +1,5 @@
 package net.ictcampus.campflix.controller.controllers;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import net.ictcampus.campflix.controller.services.GenreService;
 import net.ictcampus.campflix.model.models.Genre;
 import net.ictcampus.campflix.model.models.User;
@@ -51,6 +50,15 @@ public class GenreController {
             genreService.insert(genre);
         } catch(RuntimeException e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not insert Genre");
+        }
+    }
+
+    @PutMapping(consumes = "application/json")
+    public void update(@RequestBody Genre genre) {
+        try{
+            genreService.update(genre);
+        } catch(RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not update");
         }
     }
 
