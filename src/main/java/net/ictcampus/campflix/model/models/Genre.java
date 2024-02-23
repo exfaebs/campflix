@@ -3,6 +3,8 @@ package net.ictcampus.campflix.model.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +13,9 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull(message = "Genre name is required")
+    @NotBlank(message = "Genre name can't be blank")
     private String name;
 
     @OneToMany //Wir haben eine 1:m Beziehung Genre:Movie

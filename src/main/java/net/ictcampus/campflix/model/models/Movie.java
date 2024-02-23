@@ -1,6 +1,8 @@
 package net.ictcampus.campflix.model.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Movie {
@@ -8,8 +10,13 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull(message = "Movie name is required")
+    @NotBlank(message = "Movie name can't be empty")
     private String name;
 
+    @NotNull(message = "Movie duration is required")
+    @NotBlank(message = "Movie duration can't be empty")
     private Integer duration;
 
     @ManyToOne

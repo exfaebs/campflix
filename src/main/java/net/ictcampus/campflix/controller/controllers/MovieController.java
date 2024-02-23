@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/movies/")
@@ -49,7 +50,7 @@ public class MovieController {
     }
 
     @PostMapping(consumes = "application/json")
-    public void insert(@RequestBody Movie movie){
+    public void insert(@Valid @RequestBody Movie movie){
         try{
 
             movieService.insert(movie);
@@ -69,7 +70,7 @@ public class MovieController {
     }
 
     @PutMapping(consumes = "application/json")
-    public void update(@RequestBody Movie movie) {
+    public void update(@Valid @RequestBody Movie movie) { //todo check if working
         try{
             movieService.update(movie);
         } catch(RuntimeException e){

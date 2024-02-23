@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users") //nimmt alle /users request an
@@ -31,6 +32,7 @@ public class UserController {
     }
     @GetMapping
     public Iterable<User> findByName(@RequestParam(required = false) String name) {
+
         try{
             if (name != null){
                 return userService.findByName(name);
@@ -39,14 +41,17 @@ public class UserController {
                 return userService.findAll();
             }
 
-        } catch(EntityNotFoundException e){
+        }
+
+        catch(EntityNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
 
     @PostMapping(consumes = "application/json")
-    public void signUp(@RequestBody User user){
+    @ResponseStatus(HttpStatus.CREATED)
+    public void signUp(@Valid @RequestBody User user){
         try{
             System.out.println(user.getUsername()); //todo remove after debug
             userService.signUp(user);
@@ -67,7 +72,7 @@ public class UserController {
     }
 
     @PutMapping(consumes = "application/json")
-    public void update(@RequestBody User user) {
+    public void update(@Valid @RequestBody User user) {
         try{
             userService.update(user);
         } catch(RuntimeException e){
