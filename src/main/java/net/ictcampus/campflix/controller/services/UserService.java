@@ -3,6 +3,7 @@ package net.ictcampus.campflix.controller.services;
 import net.ictcampus.campflix.controller.repositories.UserRepository;
 import net.ictcampus.campflix.model.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -12,10 +13,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     public User findById(Integer id){
@@ -24,7 +29,7 @@ public class UserService {
     }
 
     public Iterable<User> findByName(String query){
-        Iterable<User> userIterable = userRepository.findByUsername(query);
+        Iterable<User> userIterable = userRepository.findByName(query);
         return userIterable;
     }
 
@@ -40,7 +45,7 @@ public class UserService {
 //        userRepository.save(newUser);
 //    }
     public void signUp(User user){
-
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -48,7 +53,12 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public void update(User user) {userRepository.save(user);}
+    public void update(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+
 
 
 }

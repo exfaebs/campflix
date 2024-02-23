@@ -51,7 +51,7 @@ public class UserController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@Valid @RequestBody User user){
+    public void signUp(@RequestBody User user){
         try{
             System.out.println(user.getUsername()); //todo remove after debug
             userService.signUp(user);
