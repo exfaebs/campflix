@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import static net.ictcampus.campflix.controller.security.SecurityConstants.API_DOCUMENTATION_URLS;
 import static net.ictcampus.campflix.controller.security.SecurityConstants.SIGN_UP_URL;
 import static org.apache.commons.lang3.BooleanUtils.and;
 
@@ -37,6 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
+                .antMatchers(HttpMethod.GET, API_DOCUMENTATION_URLS).permitAll()
                 .anyRequest().authenticated() //lässt alle Zugriffe auf signup zu, welche Post sind
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))

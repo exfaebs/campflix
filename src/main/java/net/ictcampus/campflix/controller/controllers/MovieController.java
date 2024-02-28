@@ -25,55 +25,55 @@ public class MovieController {
     }
 
     @GetMapping(path = "{id}")
-    public Movie findById(@PathVariable Integer id){
-        try{
+    public Movie findById(@PathVariable Integer id) {
+        try {
             return movieService.findById(id);
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
     }
 
     @GetMapping
     public Iterable<Movie> findByNameORGenreName(@RequestParam(required = false) String name,
-                                                  @RequestParam(required = false) String genre) {
-    try{
-        if (name != null){
-            return movieService.findByMovieName(name);
-        } else if (genre != null) {
-            return movieService.findByGenreName(genre);
-        } else{
-            return movieService.findAll();
+                                                 @RequestParam(required = false) String genre) {
+        try {
+            if (name != null) {
+                return movieService.findByMovieName(name);
+            } else if (genre != null) {
+                return movieService.findByGenreName(genre);
+            } else {
+                return movieService.findAll();
+            }
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
-    } catch (EntityNotFoundException e) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
-    }
     }
 
     @PostMapping(consumes = "application/json")
-    public void insert(@Valid @RequestBody Movie movie){
-        try{
+    public void insert(@Valid @RequestBody Movie movie) {
+        try {
 
             movieService.insert(movie);
-        } catch(RuntimeException e){
+        } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not insert movie");
         }
     }
 
     @DeleteMapping(path = {"{id}"})
-    public void deleteById(@PathVariable Integer id){
-        try{
+    public void deleteById(@PathVariable Integer id) {
+        try {
             Movie movie = movieService.findById(id);
             movieService.delete(movie);
-        } catch(EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
     @PutMapping(consumes = "application/json")
     public void update(@Valid @RequestBody Movie movie) { //todo check if working
-        try{
+        try {
             movieService.update(movie);
-        } catch(RuntimeException e){
+        } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not update");
         }
     }

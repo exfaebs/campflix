@@ -8,4 +8,11 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer "; // needed as prefix for the json
     public static final String HEADER_STRING = "Authorization";
 
+    public static final String[] API_DOCUMENTATION_URLS = {
+            "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**"
+    };
+
+
 }

@@ -1,5 +1,10 @@
 package net.ictcampus.campflix.controller.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import net.ictcampus.campflix.controller.services.UserService;
 import net.ictcampus.campflix.model.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +77,15 @@ public class UserController {
     }
 
     @PutMapping(consumes = "application/json")
+    @Operation(summary = "Update a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User was updated sucessfully",
+            content = {@Content (mediaType = "application/json", schema = @Schema (implementation = User.class))}),
+            @ApiResponse(responseCode = "409", description = "Conflict: User could not be updated",
+            content = {@Content (mediaType = "application/json", schema = @Schema (implementation = User.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation failed",
+                    content = {@Content (mediaType = "application/json", schema = @Schema (implementation = User.class))})
+    })
     public void update(@Valid @RequestBody User user) {
         try{
             userService.update(user);
