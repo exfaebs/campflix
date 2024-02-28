@@ -49,7 +49,7 @@ public class UserController {
     }
 
 
-    @PostMapping(consumes = "application/json")
+    @PostMapping(path="/sign-up", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public void signUp(@RequestBody User user){
         try{

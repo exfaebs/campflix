@@ -11,7 +11,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.username LIKE CONCAT ('%', :name, '%')")
     Iterable<User> findByName(@Param("name") String name); //geändert auf username
 
-    org.springframework.security.core.userdetails.User findByUsername(@Param("username") String username);
+    User findByUsername(@Param("username") String username);
 
 }
 
