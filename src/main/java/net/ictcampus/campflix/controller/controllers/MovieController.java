@@ -1,10 +1,12 @@
 package net.ictcampus.campflix.controller.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import net.ictcampus.campflix.controller.services.MovieService;
-import net.ictcampus.campflix.controller.services.UserService;
-import net.ictcampus.campflix.model.models.Genre;
-import net.ictcampus.campflix.model.models.Movie;
-import net.ictcampus.campflix.model.models.User;
+import net.ictcampus.campflix.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/movies/")
+@RequestMapping("/movies")
 public class MovieController {
 
     private final MovieService movieService;
@@ -24,23 +26,19 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping(path = "{id}")
-    public Movie findById(@PathVariable Integer id) {
-        try {
-            return movieService.findById(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
-        }
-    }
-
     @GetMapping
-    public Iterable<Movie> findByNameORGenreName(@RequestParam(required = false) String name,
-                                                 @RequestParam(required = false) String genre) {
+    @Operation(summary = "Find all movies.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movies found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movies not found", content = @Content) })
+    public Iterable<Movie> findByNameAndGenreName(@RequestParam(required = false) String name,
+            @RequestParam(required = false) String genreName) {
         try {
             if (name != null) {
-                return movieService.findByMovieName(name);
-            } else if (genre != null) {
-                return movieService.findByGenreName(genre);
+                return movieService.findByName(name);
+            } else if (genreName != null) {
+                return movieService.findByGenreName(genreName);
             } else {
                 return movieService.findAll();
             }
@@ -49,50 +47,62 @@ public class MovieController {
         }
     }
 
-    @PostMapping(consumes = "application/json")
-    public void insert(@Valid @RequestBody Movie movie) {
+    @GetMapping(path = "{id}")
+    @Operation(summary = "Find a movie by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content) })
+    public Movie findById(@PathVariable Integer id) {
         try {
-
-            movieService.insert(movie);
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not insert movie");
+            return movieService.findById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
     }
 
-    @DeleteMapping(path = {"{id}"})
-    public void deleteById(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(consumes = "application/json")
+    @Operation(summary = "Create a new movie.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Movie was created successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "409", description = "Movie could not be created", content = @Content) })
+    public void insert(@Valid @RequestBody Movie newMovie) {
         try {
-            Movie movie = movieService.findById(id);
-            movieService.delete(movie);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            movieService.insert(newMovie);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, " Movie could not be added");
         }
     }
 
     @PutMapping(consumes = "application/json")
-    public void update(@Valid @RequestBody Movie movie) { //todo check if working
+    @Operation(summary = "Update a movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie was updated successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "409", description = "Movie could not be updated", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Validation failed", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }) })
+    public void update(@Valid @RequestBody Movie movie) {
         try {
             movieService.update(movie);
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not update");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Movie could not be updated");
         }
     }
 
-
-//    public Iterable<Movie> findMovieByMovieName(@RequestParam String name) {
-//        try{
-//            return movieService.findByMovieName(name);
-//        } catch(EntityNotFoundException e){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-//        }
-//    }
-//
-//    public Iterable<Movie> findMovieByGenreName(@RequestParam String genre) {
-//        try{
-//            return movieService.findByGenreName(genre);
-//        } catch(EntityNotFoundException e){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-//        }
-//    }
-
+    @DeleteMapping(path = "{id}")
+    @Operation(summary = "Delete a movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie was deleted successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie could not be deleted", content = @Content) })
+    public void delete(@PathVariable Integer id) {
+        try {
+            movieService.deleteById(id);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Movie could not be deleted");
+        }
+    }
 }

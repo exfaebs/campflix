@@ -1,41 +1,38 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.13'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'java'
+	id 'org.springframework.boot' version '2.6.13'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
 }
 
 group 'net.ictcampus'
 version '0.1-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
-
-//Dies ist die Version von Mike. Ist unterschiedlich zu Samiras gezeigter Version,
-// indem runtime mysql bei Sam als implementenation drin ist...
 
 dependencies {
 
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'com.auth0:java-jwt:4.2.2'
+	implementation 'com.auth0:java-jwt:4.2.2'
 
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
 
-    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+	runtimeOnly 'mysql:mysql-connector-java'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit', module: 'junit'
-    }
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit', module: 'junit'
+	}
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }

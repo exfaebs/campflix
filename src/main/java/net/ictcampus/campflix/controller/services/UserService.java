@@ -1,7 +1,7 @@
 package net.ictcampus.campflix.controller.services;
 
 import net.ictcampus.campflix.controller.repositories.UserRepository;
-import net.ictcampus.campflix.model.models.User;
+import net.ictcampus.campflix.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,42 +15,24 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
-
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public User findById(Integer id){
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(EntityNotFoundException::new); //Wenn es kein User-Objekt gibt, soll es diesen Fehler ausgeben
+        return user.orElseThrow(EntityNotFoundException::new);
     }
 
-    public Iterable<User> findByName(String query){
-        Iterable<User> userIterable = userRepository.findByName(query);
-        return userIterable;
-    }
-
-    public Iterable<User> findAll(){
-        Iterable<User> userIterable = userRepository.findAll();
-        return userIterable;
-    }
-
-//    public void insert(String username, String password){
-//        User newUser = new User();
-//        newUser.setPassword(password);
-//        newUser.setUsername(username);
-//        userRepository.save(newUser);
-//    }
-    public void signUp(User user){
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
-
-    public void delete(User user){
-        userRepository.delete(user);
+    public void signUp(User newUser) {
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userRepository.save(newUser);
     }
 
     public void update(User user) {
@@ -58,7 +40,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-
-
-
+    public void deleteById(Integer id) {
+        userRepository.deleteById(id);
+    }
 }
